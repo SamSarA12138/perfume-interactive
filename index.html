@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#5E35B1">
+    <title>记忆香氛簿 | NFC交互体验</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --primary: #8A4DFF;
+            --secondary: #FF6BDA;
+            --accent: #3CEFFF;
+            --dark: #1E1A38;
+            --light: #F5F2FF;
+            --transition: all 0.4s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark) 0%, #34296D 100%);
+            color: var(--light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 20px;
+            perspective: 1000px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--accent);
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nfc-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.08);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(138, 77, 255, 0.3);
+        }
+
+        .nfc-hint i {
+            color: var(--accent);
+        }
+
+        .hero {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .perfume-display {
+            flex: 1;
+            position: relative;
+            min-height: 400px;
+        }
+
+        #perfume-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            background: linear-gradient(45deg, #2F1B63 0%, #1E1240 100%);
+        }
+
+        .perfume-info {
+            flex: 1;
+            padding-top: 30px;
+        }
+
+        #scent-name {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        #scent-subtitle {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+
+        .scent-description {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(138, 77, 255, 0.4);
+        }
+
+        .btn i {
+            font-size: 18px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 8px 8px 0 0;
+            opacity: 0.6;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            opacity: 1;
+            background: rgba(138, 77, 255, 0.1);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .perfumer-section {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .perfumer-card {
+            background: rgba(255,255,255,0.05);
+            padding: 20px;
+            border-radius: 15px;
+            flex: 1;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .perfumer-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .perfumer-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .perfumer-name {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .perfumer-title {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        .perfumer-note {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-style: italic;
+            border-left: 3px solid var(--accent);
+        }
+
+        .scents-matrix {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .scent-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .scent-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .scent-color {
+            width: 100%;
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .scent-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .scent-type {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .perfume-lab {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .mixer-controls {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 25px;
+        }
+
+        .slider-container {
+            flex: 1;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 10px;
+            -webkit-appearance: none;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(138, 77, 255, 0.5);
+        }
+
+        .result-visual {
+            height: 200px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 15px;
+            margin-top: 25px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        #visual-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            opacity: 0.6;
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+            }
+            
+            .perfume-display {
+                height: 350px;
+            }
+            
+            .perfumer-section {
+                flex-direction: column;
+            }
+            
+            .scents-matrix {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .mixer-controls {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .scents-matrix {
+                grid-template-columns: 1fr;
+            }
+            
+            #scent-name {
+                font-size: 36px;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                text-align: center;
+            }
+        }
+
+        /* 动画效果 */
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-wind"></i>
+                <h1>记忆香氛簿</h1>
+            </div>
+            <div class="nfc-hint">
+                <i class="fas fa-tag"></i>
+                <span>用手机轻触香膏包装唤醒香气记忆</span>
+            </div>
+        </header>
+
+        <main>
+            <div class="hero">
+                <div class="perfume-display">
+                    <div id="perfume-canvas"></div>
+                </div>
+                <div class="perfume-info">
+                    <h2 id="scent-name">威尼斯晨雾</h2>
+                    <p id="scent-subtitle">灵感来自威尼斯晨雾中的老书店</p>
+                    
+                    <div class="scent-description">
+                        当清晨的第一缕阳光穿透运河上的薄雾，古老的石阶旁，一个堆满古籍的书店悄然苏醒。 
+                        这款香膏捕捉了泛黄书页的木质气息、海风带来的微咸以及浸透着晨露的威尼斯空气。
+                    </div>
+                    
+                    <div class="controls">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-play"></i> 聆听气味故事
+                        </button>
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-heart"></i> 收藏记忆
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="perfumer">调香师手记</div>
+                <div class="tab" data-tab="scents">香氛矩阵</div>
+                <div class="tab" data-tab="lab">调香实验室</div>
+            </div>
+
+            <div class="tab-content active" id="perfumer-content">
+                <div class="section-title">
+                    <i class="fas fa-feather"></i>
+                    <h3>调香师创作手记</h3>
+                </div>
+                
+                <div class="perfumer-section">
+                    <div class="perfumer-card">
+                        <div class="perfumer-header">
+                            <div class="perfumer-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <div class="perfumer-name">Luca Moretti</div>
+                                <div class="perfumer-title">首席调香师 | 意大利</div>
+                            </div>
+                        </div>
+                        
+                        <p class="perfumer-note">
+                            "清晨5点，当整个威尼斯还沉浸在梦境中，我穿过圣马可广场。雾中的钟声、潮湿的石板路、
+                            以及飘来的旧书气息，成为了这款香水的灵魂。"
+                        </p>
+                        
+                        <p>Luca选择了最独特的材料来呈现威尼斯晨雾的意境：</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>前调：海盐水雾、佛手柑</li>
+                            <li>中调：雪松精华、旧书页</li>
+                            <li>基调：广藿香、琥珀</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="perfumer-card">
+                        <div class="perfumer-header">
+                            <div class="perfumer-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div>
+                                <div class="perfumer-name">沈清漪</div>
+                                <div class="perfumer-title">调香艺术总监 | 中国</div>
+                            </div>
+                        </div>
+                        
+                        <p class="perfumer-note">
+                            "在威尼斯的灵感之旅中，我看到了时间与书籍的对话。这款香膏不只是气味，
+                            更是一次穿越时空的感官之旅，将东方的留白美学融入西方的古典叙事。"
+                        </p>
+                        
+                        <p>清漪为这款香添加了一丝独特的东方情调：</p>
+                        <ul style="margin-top: 10px; padding-left: 20px;">
+                            <li>龙涎香增强深度</li>
+                            <li>一丝不易察觉的茶香</li>
+                            <li>白麝香赋予温柔的气息</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="section-title">
+                    <i class="fas fa-images"></i>
+                    <h3>威尼斯场景之旅</h3>
+                </div>
+                
+                <div class="result-visual">
+                    <canvas id="scene-canvas"></canvas>
+                </div>
+            </div>
+
+            <div class="tab-content" id="scents-content">
+                <div class="section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    <h3>香氛个性矩阵</h3>
+                </div>
+                
+                <p style="margin-bottom: 20px;">
+                    探索香氛世界的四维空间，找到属于您的香味个性。
+                    威尼斯晨雾位于冥想区域，融合了水感与木质基调。
+                </p>
+                
+                <div class="scents-matrix">
+                    <div class="scent-item">
+                        <div class="scent-color" style="background: linear-gradient(135deg, #FF75B8, #FFB966);"></div>
+                        <div class="scent-name">日光地中海</div>
+                        <div class="scent-type">活力 | 阳光</div>
+                    </div>
+                    <div class="scent-item">
+                        <div class="scent-color" style="background: linear-gradient(135deg, #3CEFFF, #A4FFE3);"></div>
+                        <div class="scent-name">北极冰泉</div>
+                        <div class="scent-type">清新 | 纯净</div>
+                    </div>
+                    <div class="scent-item">
+                        <div class="scent-color" style="background: linear-gradient(135deg, #8A4DFF, #3CEFFF);"></div>
+                        <div class="scent-name pulse">威尼斯晨雾</div>
+                        <div class="scent-type">冥想 | 叙事</div>
+                    </div>
+                    <div class="scent-item">
+                        <div class="scent-color" style="background: linear-gradient(135deg, #2C2A5B, #5255A0);"></div>
+                        <div class="scent-name">午夜图书馆</div>
+                        <div class="scent-type">神秘 | 深邃</div>
+                    </div>
+                    <div class="scent-item">
+                        <div class="scent-color" style="background: linear-gradient(135deg, #29C9A8, #5CE26E);"></div>
+                        <div class="scent-name">雨后竹林</div>
+                        <div class="scent-type">自然 | 新生</div>
+                    </div>
+                    <div class="scent-item">
+                        <div class="scent-color" style="background: linear-gradient(135deg, #FF6BDA, #A85BFF);"></div>
+                        <div class="scent-name">幻梦花海</div>
+                        <div class="scent-type">浪漫 | 梦境</div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-vial"></i> 申请香调小样
+                    </button>
+                </div>
+            </div>
+
+            <div class="tab-content" id="lab-content">
+                <div class="section-title">
+                    <i class="fas fa-flask"></i>
+                    <h3>调香实验室</h3>
+                </div>
+                
+                <p style="margin-bottom: 20px;">
+                    发挥您的创意，通过调整配方比例，定制属于自己的独特香氛。
+                    威尼斯晨雾是您的调香基础。
+                </p>
+                
+                <div class="perfume-lab">
+                    <div class="mixer-controls">
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>海洋气息</span>
+                                <span>45%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="45" class="slider" data-note="ocean">
+                        </div>
+                        
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>木质书卷</span>
+                                <span>35%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="35" class="slider" data-note="wood">
+                        </div>
+                        
+                        <div class="slider-container">
+                            <div class="slider-label">
+                                <span>琥珀余韵</span>
+                                <span>20%</span>
+                            </div>
+                            <input type="range" min="0" max="100" value="20" class="slider" data-note="amber">
+                        </div>
+                    </div>
+                    
+                    <div class="controls" style="justify-content: center;">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> 添加个性化香调
+                        </button>
+                    </div>
+                    
+                    <div class="result-visual">
+                        <canvas id="visual-particles"></canvas>
+                    </div>
+                    
+                    <div class="controls" style="margin-top: 20px; justify-content: center;">
+                        <button class="btn btn-secondary" style="width: 300px;">
+                            <i class="fas fa-save"></i> 保存我的配方
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2023 记忆香氛簿 | 触碰感知气味，技术记录情感</p>
+            <p style="margin-top: 10px;">轻触NFC标签再次体验 | 香膏ID: XC038</p>
+        </footer>
+    </div>
+
+    <script>
+        // 基础Three.js粒子场景实现
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建香水瓶主视觉
+            initPerfumeVisual();
+            
+            // 创建场景可视化
+            initSceneVisual();
+            
+            // 创建调香实验室粒子效果
+            initLabVisual();
+            
+            // 标签切换逻辑
+            setupTabs();
+            
+            // 滑块控制
+            setupSliders();
+        });
+
+        // Three.js香水瓶视觉
+        function initPerfumeVisual() {
+            const container = document.getElementById('perfume-canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            container.appendChild(renderer.domElement);
+            
+            // 添加环境光
+            const ambientLight = new THREE.AmbientLight(0x606060, 1);
+            scene.add(ambientLight);
+            
+            // 添加方向光
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // 创建香水瓶几何体
+            const perfumeGeometry = createPerfumeGeometry();
+            const perfumeMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x8A4DFF,
+                transparent: true,
+                opacity: 0.8,
+                shininess: 90
+            });
+            const perfume = new THREE.Mesh(perfumeGeometry, perfumeMaterial);
+            scene.add(perfume);
+            
+            // 创建液体
+            const liquidGeometry = createLiquidGeometry();
+            const liquidMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x3CEFFF,
+                transparent: true,
+                opacity: 0.6,
+                shininess: 100
+            });
+            const liquid = new THREE.Mesh(liquidGeometry, liquidMaterial);
+            liquid.position.y = 0.7;
+            scene.add(liquid);
+            
+            // 添加漂浮粒子
+            createFloatingParticles(scene, 50);
+            
+            // 相机位置
+            camera.position.z = 5;
+            
+            // 动画函数
+            let animateId;
+            const animate = function () {
+                animateId = requestAnimationFrame(animate);
+                
+                perfume.rotation.y += 0.005;
+                liquid.rotation.y += 0.005;
+                
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+            
+            // 响应式调整
+            window.addEventListener('resize', () => {
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+            });
+            
+            // 清理函数
+            container.cleanup = () => {
+                cancelAnimationFrame(animateId);
+                container.removeChild(renderer.domElement);
+            };
+        }
+        
+        // 创建香水瓶几何体
+        function createPerfumeGeometry() {
+            const geometry = new THREE.Group();
+            
+            // 瓶身 - 圆柱体
+            const bottleBody = new THREE.CylinderGeometry(0.8, 0.8, 2, 32);
+            
+            // 瓶颈 - 更窄的圆柱体
+            const bottleNeck = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
+            bottleNeck.translate(0, 1.25, 0);
+            
+            // 瓶肩 - 锥体连接部分
+            const bottleShoulder = new THREE.ConeGeometry(0.8, 0.5, 32);
+            bottleShoulder.translate(0, 0.95, 0);
+            
+            // 瓶盖 - 简单的长方体
+            const bottleCap = new THREE.CylinderGeometry(0.6, 0.6, 0.3, 32);
+            bottleCap.translate(0, 1.5, 0);
+            
+            // 合并几何体
+            geometry.add(bottleBody);
+            geometry.add(bottleNeck);
+            geometry.add(bottleShoulder);
+            geometry.add(bottleCap);
+            
+            return geometry;
+        }
+        
+        // 创建液体几何体
+        function createLiquidGeometry() {
+            return new THREE.CylinderGeometry(0.78, 0.78, 1, 32);
+        }
+        
+        // 创建漂浮粒子
+        function createFloatingParticles(scene, count) {
+            const particleGeometry = new THREE.SphereGeometry(0.02, 8, 8);
+            const particleMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.7
+            });
+            
+            const particles = new THREE.Group();
+            
+            for (let i = 0; i < count; i++) {
+                const particle = new THREE.Mesh(particleGeometry, particleMaterial.clone());
+                
+                // 随机位置
+                const r = 0.7 * Math.random();
+                const theta = Math.random() * Math.PI * 2;
+                
+                particle.position.set(
+                    r * Math.cos(theta),
+                    0.7 + 0.5 * Math.random(),
+                    r * Math.sin(theta)
+                );
+                
+                particles.add(particle);
+            }
+            
+            scene.add(particles);
+        }
+        
+        // 场景视觉初始化
+        function initSceneVisual() {
+            const container = document.querySelector('#scene-canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(60, container.offsetWidth / container.offsetHeight, 0.1, 100);
+            const renderer = new THREE.WebGLRenderer({ canvas: container, alpha: true });
+            
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            
+            // 添加环境光
+            const ambientLight = new THREE.AmbientLight(0x555555);
+            scene.add(ambientLight);
+            
+            // 添加方向光
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // 创建场景网格
+            createVeniceScene(scene);
+            
+            // 相机位置
+            camera.position.set(0, 2, 5);
+            camera.lookAt(0, 0, 0);
+            
+            // 动画函数
+            const animate = function () {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+        }
+        
+        // 创建威尼斯场景
+        function createVeniceScene(scene) {
+            // 水面
+            const waterGeometry = new THREE.PlaneGeometry(20, 20, 10, 10);
+            const waterMaterial = new THREE.MeshPhongMaterial({
+                color: 0x3CEFFF,
+                transparent: true,
+                opacity: 0.5,
+                wireframe: true
+            });
+            const water = new THREE.Mesh(waterGeometry, waterMaterial);
+            water.rotation.x = -Math.PI / 2;
+            scene.add(water);
+            
+            // 建筑物
+            const buildings = new THREE.Group();
+            const buildingGeometry = new THREE.BoxGeometry(0.8, 1, 0.8);
+            const buildingMaterial = new THREE.MeshPhongMaterial({
+                color: 0xD4C8FF
+            });
+            
+            for (let i = -4; i <= 4; i++) {
+                if (Math.random() > 0.3) {
+                    const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+                    building.position.set(i, 0.5, Math.random() * 4 - 2);
+                    buildings.add(building);
+                    
+                    // 增加一些高度变化
+                    building.scale.y = 0.5 + Math.random() * 1.5;
+                }
+            }
+            
+            scene.add(buildings);
+            
+            // 雾效果
+            scene.fog = new THREE.FogExp2(0x8A4DFF, 0.05);
+        }
+        
+        // 实验室粒子系统
+        function initLabVisual() {
+            const container = document.querySelector('#visual-particles');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: container, alpha: true });
+            
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            
+            // 创建粒子系统
+            createLabParticles(scene);
+            
+            // 相机位置
+            camera.position.z = 2;
+            
+            // 动画函数
+            let animateId;
+            const animate = function () {
+                animateId = requestAnimationFrame(animate);
+                
+                // 更新粒子位置
+                scene.children.forEach(child => {
+                    if (child instanceof THREE.Points) {
+                        child.rotation.y += 0.001;
+                        child.rotation.x += 0.0005;
+                    }
+                });
+                
+                renderer.render(scene, camera);
+            };
+            
+            animate();
+        }
+        
+        // 创建实验室粒子
+        function createLabParticles(scene) {
+            // 海洋气息粒子 - 蓝色
+            createParticleGroup(scene, 100, 0x3CEFFF, 1.0);
+            
+            // 木质书卷粒子 - 琥珀色
+            createParticleGroup(scene, 80, 0xFFB74D, 0.9);
+            
+            // 琥珀余韵粒子 - 淡金色
+            createParticleGroup(scene, 70, 0xFFD54F, 0.8);
+        }
+        
+        function createParticleGroup(scene, count, color, radius) {
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            
+            // 生成随机位置
+            for (let i = 0; i < count * 3; i += 3) {
+                const phi = Math.random() * Math.PI * 2;
+                const theta = Math.random() * Math.PI;
+                
+                const x = radius * Math.sin(theta) * Math.cos(phi);
+                const y = radius * Math.sin(theta) * Math.sin(phi);
+                const z = radius * Math.cos(theta);
+                
+                positions[i] = x;
+                positions[i + 1] = y;
+                positions[i + 2] = z;
+                
+                // 颜色
+                const r = ((color >> 16) & 255) / 255;
+                const g = ((color >> 8) & 255) / 255;
+                const b = (color & 255) / 255;
+                
+                colors[i] = r;
+                colors[i + 1] = g;
+                colors[i + 2] = b;
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            const particleSystem = new THREE.Points(particles, particleMaterial);
+            scene.add(particleSystem);
+        }
+        
+        // 标签切换逻辑
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // 更新标签激活状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // 更新内容显示
+                    const tabId = tab.getAttribute('data-tab');
+                    contents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabId}-content`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+        
+        // 滑块控制逻辑
+        function setupSliders() {
+            const sliders = document.querySelectorAll('.slider');
+            
+            sliders.forEach(slider => {
+                // 初始化显示
+                const valueDisplay = slider.parentElement.querySelector('.slider-label span:last-child');
+                valueDisplay.textContent = `${slider.value}%`;
+                
+                slider.addEventListener('input', () => {
+                    // 更新数值显示
+                    valueDisplay.textContent = `${slider.value}%`;
+                    
+                    // 更新视觉效果
+                    updateLabVisual();
+                });
+            });
+        }
+        
+        // 更新实验室视觉效果
+        function updateLabVisual() {
+            // 这里可以添加根据滑块值改变粒子系统的逻辑
+            // 例如改变粒子颜色、密度或运动速度
+        }
+    </script>
+</body>
+</html>
