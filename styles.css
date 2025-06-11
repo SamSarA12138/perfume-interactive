@@ -1,0 +1,525 @@
+/* 基础样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root {
+  --primary: #8A4DFF;
+  --secondary: #FF6BDA;
+  --accent: #3CEFFF;
+  --dark: #1E1A38;
+  --light: #F5F2FF;
+  --transition: all 0.4s ease;
+}
+
+body {
+  background: linear-gradient(135deg, var(--dark) 0%, #34296D 100%);
+  color: var(--light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding: 20px;
+  perspective: 1000px;
+}
+
+/* 容器布局 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 页眉样式 */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  margin-bottom: 40px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo i {
+  font-size: 28px;
+  color: var(--accent);
+}
+
+.logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.nfc-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 8px 15px;
+  border-radius: 50px;
+  font-size: 14px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(138, 77, 255, 0.3);
+}
+
+.nfc-hint i {
+  color: var(--accent);
+}
+
+/* 主内容区样式 */
+.hero {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+.perfume-display {
+  flex: 1;
+  position: relative;
+  min-height: 400px;
+}
+
+#perfume-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(45deg, #2F1B63 0%, #1E1240 100%);
+}
+
+.perfume-info {
+  flex: 1;
+  padding-top: 30px;
+}
+
+#scent-name {
+  font-size: 48px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#scent-subtitle {
+  font-size: 18px;
+  opacity: 0.8;
+  margin-bottom: 30px;
+}
+
+.scent-description {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  font-size: 16px;
+  line-height: 1.6;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.btn {
+  padding: 12px 25px;
+  border-radius: 50px;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-primary {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  color: white;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(138, 77, 255, 0.4);
+}
+
+.btn i {
+  font-size: 18px;
+}
+
+/* 标签页样式 */
+.tabs {
+  display: flex;
+  margin-bottom: 30px;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab {
+  padding: 12px 25px;
+  cursor: pointer;
+  font-weight: 600;
+  border-radius: 8px 8px 0 0;
+  opacity: 0.6;
+  transition: var(--transition);
+}
+
+.tab.active {
+  opacity: 1;
+  background: rgba(138, 77, 255, 0.1);
+  border-bottom: 3px solid var(--primary);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.5s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 调香师部分样式 */
+.section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title i {
+  color: var(--accent);
+}
+
+.perfumer-section {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+.perfumer-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 15px;
+  flex: 1;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.perfumer-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.perfumer-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+}
+
+.perfumer-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.perfumer-name {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.perfumer-title {
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+.perfumer-note {
+  margin: 20px 0;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  font-style: italic;
+  border-left: 3px solid var(--accent);
+}
+
+/* 香氛矩阵样式 */
+.scents-matrix {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.scent-item {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.scent-item:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+}
+
+.scent-color {
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.scent-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.scent-type {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* 调香实验室样式 */
+.perfume-lab {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 20px;
+  margin-bottom: 40px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mixer-controls {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.slider-container {
+  flex: 1;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.slider {
+  width: 100%;
+  height: 10px;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(138, 77, 255, 0.5);
+}
+
+.result-visual {
+  height: 200px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  margin-top: 25px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 图片显示样式 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.image-grid-item {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.image-grid-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* 香氛产品展示 */
+.scent-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 30px 0;
+}
+
+.scent-product-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 12px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.scent-product-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.scent-product-card .scent-name {
+  padding-top: 10px;
+  text-align: center;
+}
+
+/* 页脚样式 */
+footer {
+  text-align: center;
+  padding: 30px 0;
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+/* 响应式设计 */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+  }
+  
+  .perfume-display {
+    height: 350px;
+  }
+  
+  .perfumer-section {
+    flex-direction: column;
+  }
+  
+  .scents-matrix {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .mixer-controls {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .scent-products {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .scents-matrix {
+    grid-template-columns: 1fr;
+  }
+  
+  #scent-name {
+    font-size: 36px;
+  }
+  
+  .tabs {
+    flex-wrap: wrap;
+  }
+  
+  .tab {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scent-products {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 动画效果 */
+@keyframes pulse {
+  0% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+  50% { 
+    transform: scale(1.05); 
+    opacity: 0.8; 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* 预加载样式 */
+.preload {
+  display: none;
+}
