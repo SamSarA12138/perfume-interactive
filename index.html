@@ -22,12 +22,12 @@
     <!-- 图片资源预加载区 -->
     <div class="preload">
         <!-- 威尼斯特色图像 -->
-        <img src="https://images.unsplash.com/photo-1533778781453-92b3d9a2a36d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Venice preload">
+        <img src="assets/images/scenes/canal.jpg" alt="Venice preload">
         <img src="https://images.unsplash.com/photo-1542662565-7e4e66e4e6eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Perfume bottle preload">
         
         <!-- 调香师头像 -->
-        <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Perfumer Luca">
-        <img src="https://th.bing.com/th/id/OIP.epalS3gt5lw2WjJS3vO-yQHaLH?w=202&h=303&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" alt="Perfumer Qingyi">
+        <img src="assets/images/perfumers/Luca.jpg" alt="Perfumer Luca">
+        <img src="assets/images/perfumers/qingyi.jpg" alt="Perfumer Qingyi">
         
         <!-- 香调图像 -->
         <img src="https://images.unsplash.com/photo-1547996160-81dfa63596ed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Scent Mediterranean">
@@ -51,9 +51,9 @@
 
         <main>
             <div class="hero">
-                <div class="perfume-display">
-                    <div id="perfume-canvas"></div>
-                </div>
+			<div class="perfume-display">
+    <img src="assets/images/xianggao/xianggao.jpg" alt="香水展示图" style="width: 100%; height: auto; border-radius: 12px;">
+				</div>
                 <div class="perfume-info">
                     <h2 id="scent-name">威尼斯晨雾</h2>
                     <p id="scent-subtitle">灵感来自威尼斯晨雾中的老书店</p>
@@ -62,6 +62,7 @@
                         当清晨的第一缕阳光穿透运河上的薄雾，古老的石阶旁，一个堆满古籍的书店悄然苏醒。 
                         这款香膏捕捉了泛黄书页的木质气息、海风带来的微咸以及浸透着晨露的威尼斯空气。
                     </div>
+					
                     
                     <div class="controls">
                         <button class="btn btn-primary">
@@ -89,7 +90,7 @@
                 <div class="perfumer-section">
                     <div class="perfumer-card">
                         <div class="perfumer-header">
-                            <img class="perfumer-avatar" style="border-radius: 50%; width: 60px; height: 60px;" src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Luca Moretti">
+                            <img class="perfumer-avatar" style="border-radius: 50%; width: 60px; height: 60px;" src="assets/images/perfumers/luca.jpg" alt="Luca Moretti">
                             <div>
                                 <div class="perfumer-name">Luca Moretti</div>
                                 <div class="perfumer-title">首席调香师 | 意大利</div>
@@ -111,7 +112,7 @@
                     
                     <div class="perfumer-card">
                         <div class="perfumer-header">
-                            <img class="perfumer-avatar" style="border-radius: 50%; width: 60px; height: 60px;" src="https://th.bing.com/th/id/OIP.epalS3gt5lw2WjJS3vO-yQHaLH?w=202&h=303&c=7&r=0&o=7&dpr=1.5&pid=1.7&rm=3" alt="沈清漪">
+                            <img class="perfumer-avatar" style="border-radius: 50%; width: 60px; height: 60px;" src="assets/images/perfumers/qingyi.jpg" alt="沈清漪">
                             <div>
                                 <div class="perfumer-name">沈清漪</div>
                                 <div class="perfumer-title">调香艺术总监 | 中国</div>
@@ -137,20 +138,18 @@
                     <h3>威尼斯场景之旅</h3>
                 </div>
                 
-                <div class="result-visual">
-                    <canvas id="scene-canvas"></canvas>
-                </div>
+                
                 
                 <!-- 威尼斯图片展示 -->
                 <div class="image-grid">
                     <div class="image-grid-item">
-                        <img src="https://images.unsplash.com/photo-1533778781453-92b3d9a2a36d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Venice Canal">
+                        <img src="assets/images/scenes/canal.jpg" alt="Venice Canal">
                     </div>
                     <div class="image-grid-item">
-                        <img src="https://images.unsplash.com/photo-1534349762230-e0cadf78f5da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Venice Bridge">
+                        <img src="assets/images/scenes/Bridge.jpg" alt="Venice Bridge">
                     </div>
                     <div class="image-grid-item">
-                        <img src="https://images.unsplash.com/photo-1566551328874-f7a3ef64b9d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Venice Building">
+                        <img src="assets/images/scenes/Building.jpg" alt="Venice Building">
                     </div>
                 </div>
             </div>
@@ -202,19 +201,19 @@
                 <!-- 香氛产品展示 -->
                 <div class="scent-products">
                     <div class="scent-product-card">
-                        <img src="https://images.unsplash.com/photo-1547996160-81dfa63596ed?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Scent Mediterranean">
+                        <img src="assets/images/scenes/riguang.jpg" alt="Scent Mediterranean">
                         <div class="scent-name">日光地中海</div>
                     </div>
                     <div class="scent-product-card">
-                        <img src="https://images.unsplash.com/photo-1533657474191-31fa45f8b7f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Scent Arctic">
+                        <img src="assets/images/scenes/beiji.jpg" alt="Scent Arctic">
                         <div class="scent-name">北极冰泉</div>
                     </div>
                     <div class="scent-product-card">
-                        <img src="https://images.unsplash.com/photo-1542662565-7e4e66e4e6eb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Scent Venice">
+                        <img src="assets/images/scenes/weinisi.jpg" alt="Scent Venice">
                         <div class="scent-name">威尼斯晨雾</div>
                     </div>
                     <div class="scent-product-card">
-                        <img src="https://images.unsplash.com/photo-1560241803-2f7c72a9d19c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="Scent Library">
+                        <img src="assets/images/scenes/wuye.jpg" alt="Scent Library">
                         <div class="scent-name">午夜图书馆</div>
                     </div>
                 </div>
